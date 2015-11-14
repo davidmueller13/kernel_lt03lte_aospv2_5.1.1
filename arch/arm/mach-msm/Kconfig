@@ -179,6 +179,7 @@ config ARCH_MSM8960
 	select MSM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_CPU_PWRCTL
 	select MSM_LPM_TEST
+	select HAS_MACH_MEMUTILS
 
 config ARCH_MSM8930
 	bool "MSM8930"
@@ -216,6 +217,7 @@ config ARCH_MSM8930
 	select ARM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_CPU_PWRCTL
+	select HAS_MACH_MEMUTILS
 
 config ARCH_APQ8064
 	bool "APQ8064"
@@ -250,6 +252,7 @@ config ARCH_APQ8064
 	select ARM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_CPU_PWRCTL
+	select HAS_MACH_MEMUTILS
 
 config ARCH_MSM8974
 	bool "MSM8974"
@@ -310,6 +313,7 @@ config ARCH_APQ8084
 	select REGULATOR
 	select ARM_HAS_SG_CHAIN
 	select ARCH_DMA_ADDR_T_64BIT if ARM_LPAE
+	select HAS_MACH_MEMUTILS
 	select ARCH_WANT_KMAP_ATOMIC_FLUSH
 	select MEMORY_HOLE_CARVEOUT
 	select QMI_ENCDEC
@@ -4376,4 +4380,11 @@ config MUIC_RESET_PIN_ENABLE
         help 
                 This request is from H/W team
 		In case of mUIC voltage drop, mUIC will be reset
+
+config HAS_MACH_MEMUTILS
+	default n
+	bool "Motorola MSM memcpy enhancements"
+	help
+	Faster memcpy performance for Krait
+
 endif
