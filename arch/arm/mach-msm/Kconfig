@@ -4313,9 +4313,13 @@ config TIMA_RKP_LAZY_MMU
 config	TIMA_RKP_DMA_MVA_TO_SETWAY
 	bool
 	depends on TIMA_RKP
-	default n
-	help
-	 Flush cache by set-way for dma?
+
+config FORCE_FAST_CHARGE
+  	bool "Force AC charge mode at will"
+  	default y
+  	help
+   	A simple sysfs interface to force adapters that
+    	are detected as USB to charge as AC.
 
 config TIMA_RKP_DEBUG
        bool
