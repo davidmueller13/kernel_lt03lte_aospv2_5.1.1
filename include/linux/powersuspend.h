@@ -28,5 +28,7 @@ struct power_suspend {
 void register_power_suspend(struct power_suspend *handler);
 void unregister_power_suspend(struct power_suspend *handler);
 
+extern bool power_suspended;
+
 #endif
 
