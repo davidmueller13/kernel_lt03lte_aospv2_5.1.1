@@ -34,6 +34,9 @@
 #include "mipi_dsi.h"
 #include "mdp.h"
 #include "mdp4.h"
+#ifdef CONFIG_MACH_JF
+#include <linux/lcd_notify.h>
+#endif
 
 u32 dsi_irq;
 u32 esc_byte_ratio;
@@ -116,6 +119,23 @@ static int mipi_dsi_off(struct platform_device *pdev)
 	mipi_dsi_ahb_ctrl(0);
 
 	mipi_dsi_unprepare_clocks();
+
+	mipi_dsi_unprepare_ahb_clocks();
+
+	#if defined(CONFIG_MACH_JF)
+		lcd_notifier_call_chain(LCD_EVENT_ON_END, NULL);
+	#endif
+
+	usleep(5000);
+
+	if (mipi_dsi_pdata && mipi_dsi_pdata->active_reset)
+		mipi_dsi_pdata->active_reset(0); /* low */
+
+	usleep(2000); /*1ms delay(minimum) required between reset low and AVDD off*/
+
+	if (mipi_dsi_pdata && mipi_dsi_pdata->panel_power_save)
+		mipi_dsi_pdata->panel_power_save(0);
+
 	if (mipi_dsi_pdata && mipi_dsi_pdata->dsi_power_save)
 		mipi_dsi_pdata->dsi_power_save(0);
 
@@ -150,6 +170,47 @@ static int mipi_dsi_on(struct platform_device *pdev)
 	var = &fbi->var;
 	pinfo = &mfd->panel_info;
 	esc_byte_ratio = pinfo->mipi.esc_byte_ratio;
+
+	if (mipi_dsi_pdata && mipi_dsi_pdata->power_common)
+		mipi_dsi_pdata->power_common();
+
+#if defined(CONFIG_SUPPORT_SECOND_POWER)
+#if defined(CONFIG_FB_MSM_MIPI_RENESAS_TFT_VIDEO_FULL_HD_PT_PANEL)
+	if( is_booting == 1 )
+	{
+		is_booting = 0;
+#if defined(CONFIG_MACH_JACTIVE_ATT)
+		usleep(5000);
+		if (mipi_dsi_pdata && mipi_dsi_pdata->active_reset)
+				mipi_dsi_pdata->active_reset(0); /* low */
+		usleep(2000);
+
+		if (mipi_dsi_pdata && mipi_dsi_pdata->panel_power_save)
+			mipi_dsi_pdata->panel_power_save(0);
+		msleep(10);
+#elif defined(CONFIG_MACH_JACTIVE_EUR)
+		usleep(5000);
+		if (mipi_dsi_pdata && mipi_dsi_pdata->active_reset)
+				mipi_dsi_pdata->active_reset(0); /* low */
+		usleep(2000);
+
+		if (mipi_dsi_pdata && mipi_dsi_pdata->panel_power_save)
+			mipi_dsi_pdata->panel_power_save(0);
+		msleep(10);
+#endif
+	}
+#endif
+
+	if (mipi_dsi_pdata && mipi_dsi_pdata->panel_power_save)
+		mipi_dsi_pdata->panel_power_save(1);
+#endif
+
+#if defined(CONFIG_MACH_JF)
+	lcd_notifier_call_chain(LCD_EVENT_ON_START, NULL);
+#endif
+
+	if (system_rev == 6)
+		mdelay(500);
 
 	if (mipi_dsi_pdata && mipi_dsi_pdata->dsi_power_save)
 		mipi_dsi_pdata->dsi_power_save(1);
