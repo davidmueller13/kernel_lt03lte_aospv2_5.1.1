@@ -245,8 +245,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -std=gnu89 -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
-HOSTCXXFLAGS = -Ofast -fgcse-las -std=gnu89 -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -Ofast -fomit-frame-pointer -std=gnu89 -fgcse-las -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -fivopts -fno-inline-functions
+HOSTCXXFLAGS = -Ofast -fgcse-las -std=gnu89 -fgraphite -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -g0 -fmodulo-sched -fmodulo-sched-allow-regmoves -fno-tree-vectorize -Wno-array-bounds -fivopts -fno-inline-functions
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
