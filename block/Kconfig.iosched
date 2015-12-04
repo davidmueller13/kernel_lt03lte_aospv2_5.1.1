@@ -89,14 +89,14 @@ config CGROUP_BFQIO
 
 config IOSCHED_ZEN
 	tristate "Zen I/O scheduler"
-	default y
+	default n
 	---help---
 		FCFS, dispatches are back-inserted, deadlines ensure fairness.
 		Should work best with devices where there is no travel delay.
 
 config IOSCHED_TRIPNDROID
 	tristate "Tripndroid"
-	default y
+	default n
 	---help---
 	  The Trip N Droid scheduler
 
