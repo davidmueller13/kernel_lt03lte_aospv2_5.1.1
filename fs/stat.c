@@ -14,6 +14,7 @@
 #include <linux/security.h>
 #include <linux/syscalls.h>
 #include <linux/pagemap.h>
+#include <linux/zfile.h>
 
 #include <asm/uaccess.h>
 #include <asm/unistd.h>
@@ -59,10 +60,14 @@ int vfs_fstat(unsigned int fd, struct kstat *stat)
 {
 	struct file *f = fget(fd);
 	int error = -EBADF;
+	int fput_needed;
 
 	if (f) {
 		error = vfs_getattr(f->f_path.mnt, f->f_path.dentry, stat);
 		fput(f);
+		if (!error)
+			zpath_realsize(f->f_path.dentry, &stat->size);
+		fput_light(f, fput_needed);
 	}
 	return error;
 }
@@ -89,6 +94,8 @@ int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
 		goto out;
 
 	error = vfs_getattr(path.mnt, path.dentry, stat);
+	if (!error)
+		zpath_realsize(path.dentry, &stat->size);
 	path_put(&path);
 out:
 	return error;
